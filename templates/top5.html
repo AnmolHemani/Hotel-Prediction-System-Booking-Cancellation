@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="card mb-4">
+        <div class="card-header bg-dark text-white">
+            <h5 class="mb-0">Top Performers</h5>
+        </div>
+        <div class="card-body">
+            <form class="mb-4">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="sort_by" class="form-label">Sort By:</label>
+                        <select class="form-select" id="sort_by" name="sort_by" onchange="this.form.submit()">
+                            {% for column in numeric_columns %}
+                            <option value="{{ column }}" {% if column==sort_by %}selected{% endif %}>
+                                {{ column.replace("_", " ").title() }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </form>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="chart-container">
+                        <img src="data:image/png;base64,{{ chart_base64 }}" class="img-fluid" alt="Top 5 Chart">
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-responsive mt-4">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Booking ID</th>
+                            <th>Room Type</th>
+                            <th>Guests</th>
+                            <th>Arrival Date</th>
+                            <th>Price</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for booking in top_records %}
+                        <tr>
+                            <td>{{ booking.Booking_ID }}</td>
+                            <td>{{ booking.room_type_reserved }}</td>
+                            <td>{{ booking.no_of_adults }}A, {{ booking.no_of_children }}C</td>
+                            <td>{{ booking.arrival_date }}</td>
+                            <td>₹{{ booking.avg_price_per_room }}</td>
+                            <td>
+                                <span
+                                    class="badge bg-{{ 'success' if booking.booking_status == 'Not_Canceled' else 'danger' }}">
+                                    {{ booking.booking_status }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

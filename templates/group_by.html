@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="card mb-4">
+        <div class="card-header bg-dark text-white">
+            <h5 class="mb-0">Group Analysis</h5>
+        </div>
+        <div class="card-body">
+            <form class="mb-4">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="group_by" class="form-label">Group By:</label>
+                        <select class="form-select" id="group_by" name="group_by" onchange="this.form.submit()">
+                            {% for column in columns %}
+                            <option value="{{ column }}" {% if column==group_by %}selected{% endif %}>
+                                {{ column.replace("_", " ").title() }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </form>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="chart-container">
+                        <img src="data:image/png;base64,{{ chart_base64 }}" class="img-fluid"
+                            alt="Group Analysis Chart">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>{{ group_by.replace("_", " ").title() }}</th>
+                                    <th>Count</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in grouped_data %}
+                                <tr>
+                                    <td>{{ item.group_name }}</td>
+                                    <td>{{ item.count }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
